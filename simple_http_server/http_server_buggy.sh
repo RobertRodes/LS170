@@ -3,7 +3,17 @@
 function server () {
   while true
   do
-    read -a message_arr
+    message_arr=()
+    check=true
+    while $check
+    do
+      read line
+      message_arr+=($line)
+      if [[ "${#line}" -eq 13 ]]
+      then
+        check=false
+      fi
+    done
     method=${message_arr[0]}
     path=${message_arr[1]}
     if [[ $method = 'GET' ]]
@@ -22,4 +32,4 @@ function server () {
 
 coproc SERVER_PROCESS { server; }
 
-nc -lvk 2345 <&${SERVER_PROCESS[0]} >&${SERVER_PROCESS[1]}
+nc -lv 2345 <&${SERVER_PROCESS[0]} >&${SERVER_PROCESS[1]}
